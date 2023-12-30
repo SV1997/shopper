@@ -1,0 +1,7 @@
+{
+    "env":{
+        "MONGO_USER":"saharsh_vashishtha",
+        "MONGO_PASSWORD":"saharsh97",
+        "STRIPE_KEY": "sk_test_51OJBUmSEdpuyefD8pNN0ufEBqqA0rwROy0oVY06N9qhTjBRlaqwJnoLHZhiBtg14OTQnitd3jaLfH68QpL3igevJ00KXsrxwO1"
+    }
+}
