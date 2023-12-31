@@ -14,6 +14,8 @@ const errorController = require('./controllers/error');
 const User = require('./models/user');
 const morgan = require('morgan');
 const fs=require('fs');
+const crypto= require('crypto');
+
 console.log(`${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}`)
 const MONGODB_URI =
   `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.uqfekfh.mongodb.net/`;
@@ -56,7 +58,26 @@ const authRoutes = require('./routes/auth');
 const accessLogStream= fs.createWriteStream(
   path.join(__dirname,'access_log'), {flags:'a'}
 )
-app.use(helmet())
+app.use( (req, res, next) => {
+res.locals.nonce1 = crypto.randomBytes(16).toString("hex");
+next();})
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          (req, res) => `'nonce-${res.locals.nonce1}'`,
+        ],
+        styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+        scriptSrcAttr: ["'self'", "'unsafe-inline'"],
+        frameSrc: ["'self'"],
+      },
+    },
+  })
+);
+
 app.use(compression())
 app.use(morgan('combined', {stream: accessLogStream}))
 app.use(bodyParser.urlencoded({ extended: false }));

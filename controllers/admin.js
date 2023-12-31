@@ -158,7 +158,7 @@ exports.postEditProduct = (req, res, next) => {
       product.title = updatedTitle;
       product.price = updatedPrice;
       product.description = updatedDesc;
-      if(image){
+      if(updatedImageUrl){
         fileHelper.deleteFile(product.imageUrl);
         product.imageUrl=updatedImageUrl;
       }
@@ -183,7 +183,8 @@ exports.getProducts = (req, res, next) => {
       res.render('admin/products', {
         prods: products,
         pageTitle: 'Admin Products',
-        path: '/admin/products'
+        path: '/admin/products',
+        nonce: res.locals.nonce1
       });
     })
     .catch(err => {
